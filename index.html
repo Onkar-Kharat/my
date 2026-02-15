@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>FitZone Gym | Build Strength</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* critical styles */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0d0d0d;
+      color: white;
+    }
+
+    .page-section {
+      display: none;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .glass-panel {
+      background: rgba(26, 26, 26, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .accent-glow:hover {
+      box-shadow: 0 0 25px -5px rgba(255, 46, 0, 0.4);
+    }
+
+    .sidebar-link.active {
+      background-color: rgba(255, 46, 0, 0.1);
+      color: #ff2e00;
+      border-right: 2px solid #ff2e00;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #ff2e00;
+      box-shadow: 0 0 0 1px #ff2e00;
+      outline: none;
+    }
+
+    /* mobile menu animation */
+    .mobile-menu-enter {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.2s ease;
+    }
+
+    .mobile-menu-enter-active {
+      max-height: 300px;
+      opacity: 1;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #ff2e00;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #cc2500;
+    }
+
+    /* Progress bar animation */
+    .progress-bar {
+      transition: width 0.5s ease-in-out;
+    }
+
+    /* Calendar styles */
+    .class-item {
+      transition: all 0.2s ease;
+    }
+
+    .class-item:hover {
+      transform: translateX(4px);
+    }
+  </style>
+</head>
+
+<body class="antialiased selection:bg-[#ff2e00] selection:text-white overflow-x-hidden text-sm sm:text-base font-light">
+
+  <!-- PUBLIC NAVIGATION (with mobile menu) -->
+  <nav id="public-nav" class="fixed top-0 w-full z-50 transition-all duration-300 glass-panel border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <div onclick="router('home')" class="cursor-pointer flex items-center gap-2 group">
+        <div
+          class="w-8 h-8 bg-[#ff2e00] rounded flex items-center justify-center text-black font-bold tracking-tighter transform group-hover:rotate-12 transition-transform">
+          FZ</div>
+        <span class="text-lg font-semibold tracking-tight text-white">FITZONE</span>
+      </div>
+
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+        <button onclick="router('home')" class="hover:text-white transition-colors">Home</button>
+        <button onclick="router('about')" class="hover:text-white transition-colors">About</button>
+        <button onclick="router('gallery')" class="hover:text-white transition-colors">Gallery</button>
+        <button onclick="router('contact')" class="hover:text-white transition-colors">Contact</button>
+      </div>
+
+      <!-- Desktop Auth Buttons -->
+      <div class="hidden md:flex items-center gap-4">
+        <button onclick="router('login')"
+          class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Login</button>
+        <button onclick="router('register')"
+          class="bg-[#ff2e00] hover:bg-red-600 text-white text-xs sm:text-sm font-medium px-5 py-2 rounded transition-all accent-glow">Join
+          Now</button>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex items-center gap-2 md:hidden">
+        <button onclick="router('register')"
+          class="bg-[#ff2e00] hover:bg-red-600 text-white text-xs font-medium px-3 py-1.5 rounded transition-all">Join</button>
+        <button id="mobile-menu-btn" class="text-white p-2 focus:outline-none" aria-label="Menu">
+          <iconify-icon icon="solar:hamburger-menu-linear" width="24"></iconify-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Dropdown -->
+    <div id="mobile-menu"
+      class="md:hidden bg-[#1a1a1a] border-t border-white/5 overflow-hidden transition-all duration-300 max-h-0 opacity-0">
+      <div class="px-4 py-3 flex flex-col space-y-3">
+        <button onclick="router('home'); toggleMobileMenu()"
+          class="text-left text-zinc-300 hover:text-white py-2 border-b border-white/5">Home</button>
+        <button onclick="router('about'); toggleMobileMenu()"
+          class="text-left text-zinc-300 hover:text-white py-2 border-b border-white/5">About</button>
+        <button onclick="router('gallery'); toggleMobileMenu()"
+          class="text-left text-zinc-300 hover:text-white py-2 border-b border-white/5">Gallery</button>
+        <button onclick="router('contact'); toggleMobileMenu()"
+          class="text-left text-zinc-300 hover:text-white py-2 border-b border-white/5">Contact</button>
+        <button onclick="router('login'); toggleMobileMenu()"
+          class="text-left text-zinc-300 hover:text-white py-2 border-b border-white/5">Login</button>
+        <button onclick="router('register'); toggleMobileMenu()"
+          class="text-left bg-[#ff2e00]/10 text-[#ff2e00] py-2 px-3 rounded">Join Now</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HOME PAGE -->
+  <div id="home" class="page-section pt-16">
+    <section class="relative h-[85vh] flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop"
+          class="w-full h-full object-cover opacity-40 grayscale" alt="Gym Background">
+        <div class="absolute inset-0 bg-linear-to-t from-[#0d0d0d] via-[#0d0d0d]/50 to-transparent"></div>
+      </div>
+      <div class="relative z-10 text-center px-6 max-w-4xl mx-auto mt-10">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-[#ff2e00] mb-6">
+          <span class="w-2 h-2 rounded-full bg-[#ff2e00] animate-pulse"></span> PREMIUM GYM MANAGEMENT SYSTEM
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-7xl font-semibold tracking-tight leading-tight mb-6">Build
+          Strength.<br><span class="text-transparent bg-clip-text bg-linear-to-r from-white to-zinc-500">Build
+            Discipline.</span></h1>
+        <p class="text-zinc-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">Experience the next
+          evolution of fitness management. Track progress, manage memberships, and achieve your peak potential with
+          FitZone.</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button onclick="router('register')"
+            class="w-full sm:w-auto bg-[#ff2e00] text-white px-8 py-3 rounded font-medium hover:bg-red-600 transition-all accent-glow">Start
+            Free Trial</button>
+          <button onclick="router('login')"
+            class="w-full sm:w-auto bg-white/5 border border-white/10 text-white px-8 py-3 rounded font-medium hover:bg-white/10 transition-all">Member
+            Login</button>
+        </div>
+      </div>
+    </section>
+    <!-- Rest of home sections (same as before) -->
+    <section class="py-24 px-6 bg-[#0d0d0d]">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl font-semibold tracking-tight mb-12 text-center">Premium Services</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div
+            class="p-8 rounded-xl bg-[#1a1a1a] border border-white/5 hover:border-[#ff2e00]/30 transition-all group hover:-translate-y-1">
+            <div
+              class="w-12 h-12 rounded-lg bg-[#ff2e00]/10 text-[#ff2e00] flex items-center justify-center mb-6 group-hover:bg-[#ff2e00] group-hover:text-white transition-colors">
+              <iconify-icon icon="solar:dumbbell-large-linear" width="28"></iconify-icon>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Personal Training</h3>
+            <p class="text-zinc-400 font-light leading-relaxed">Dedicated coaches to build a plan specifically for your
+              body type and goals.</p>
+          </div>
+          <div
+            class="p-8 rounded-xl bg-[#1a1a1a] border border-white/5 hover:border-[#ff2e00]/30 transition-all group hover:-translate-y-1">
+            <div
+              class="w-12 h-12 rounded-lg bg-[#ff2e00]/10 text-[#ff2e00] flex items-center justify-center mb-6 group-hover:bg-[#ff2e00] group-hover:text-white transition-colors">
+              <iconify-icon icon="solar:users-group-rounded-linear" width="28"></iconify-icon>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Group Classes</h3>
+            <p class="text-zinc-400 font-light leading-relaxed">High-energy HIIT, Yoga, and CrossFit classes led by
+              certified instructors.</p>
+          </div>
+          <div
+            class="p-8 rounded-xl bg-[#1a1a1a] border border-white/5 hover:border-[#ff2e00]/30 transition-all group hover:-translate-y-1">
+            <div
+              class="w-12 h-12 rounded-lg bg-[#ff2e00]/10 text-[#ff2e00] flex items-center justify-center mb-6 group-hover:bg-[#ff2e00] group-hover:text-white transition-colors">
+              <iconify-icon icon="solar:chef-hat-heart-linear" width="28"></iconify-icon>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Nutrition Plans</h3>
+            <p class="text-zinc-400 font-light leading-relaxed">Custom diet plans tailored to your metabolism and
+              workout intensity.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ABOUT PAGE -->
+  <div id="about" class="page-section pt-24 px-6 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-4xl font-semibold tracking-tight mb-8">About FitZone</h1>
+      <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+        <div>
+          <p class="text-zinc-400 leading-relaxed mb-6 font-light">Founded in 2023, FitZone was built with a singular
+            mission: to provide a premium, technology-driven fitness experience that respects your time and maximizes
+            your results.</p>
+          <p class="text-zinc-400 leading-relaxed font-light">We combine state-of-the-art equipment with intelligent
+            tracking software, ensuring that every rep counts. Our facility is designed for focus, discipline, and
+            community.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-[#1a1a1a] p-6 rounded-lg text-center border border-white/5">
+            <h3 class="text-3xl font-semibold text-[#ff2e00] mb-1">24/7</h3>
+            <p class="text-xs text-zinc-500 uppercase tracking-widest">Access</p>
+          </div>
+          <div class="bg-[#1a1a1a] p-6 rounded-lg text-center border border-white/5">
+            <h3 class="text-3xl font-semibold text-[#ff2e00] mb-1">50+</h3>
+            <p class="text-xs text-zinc-500 uppercase tracking-widest">Trainers</p>
+          </div>
+          <div class="bg-[#1a1a1a] p-6 rounded-lg text-center border border-white/5">
+            <h3 class="text-3xl font-semibold text-[#ff2e00] mb-1">2k+</h3>
+            <p class="text-xs text-zinc-500 uppercase tracking-widest">Members</p>
+          </div>
+          <div class="bg-[#1a1a1a] p-6 rounded-lg text-center border border-white/5">
+            <h3 class="text-3xl font-semibold text-[#ff2e00] mb-1">100%</h3>
+            <p class="text-xs text-zinc-500 uppercase tracking-widest">Results</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY PAGE -->
+  <div id="gallery" class="page-section pt-24 px-6 min-h-screen">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-4xl font-semibold tracking-tight mb-8 text-center">Facility Gallery</h1>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[200px]">
+        <div class="md:col-span-2 md:row-span-2 rounded-xl overflow-hidden relative group"><img
+            src="https://images.unsplash.com/photo-1593079831268-3381b0db4a77?q=80&w=2069&auto=format&fit=crop"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Gym">
+          <div
+            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            <span class="text-white font-medium tracking-wide">Main Weight Room</span>
+          </div>
+        </div>
+        <div class="rounded-xl overflow-hidden relative group"><img
+            src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=2069&auto=format&fit=crop"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Gym"></div>
+        <div class="rounded-xl overflow-hidden relative group"><img
+            src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=2069&auto=format&fit=crop"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Gym"></div>
+        <div class="md:col-span-3 rounded-xl overflow-hidden relative group"><img
+            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Gym"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT PAGE -->
+  <div id="contact" class="page-section pt-24 px-6 min-h-screen">
+    <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
+      <div>
+        <h1 class="text-4xl font-semibold tracking-tight mb-4">Get in Touch</h1>
+        <p class="text-zinc-400 mb-8 font-light">Have questions about memberships or personal training? Send us a
+          message.</p>
+        <form onsubmit="event.preventDefault(); alert('Message sent!');" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <input type="text" placeholder="First Name"
+              class="w-full bg-[#1a1a1a] border border-zinc-800 rounded p-3 text-sm focus:outline-none" required>
+            <input type="text" placeholder="Last Name"
+              class="w-full bg-[#1a1a1a] border border-zinc-800 rounded p-3 text-sm focus:outline-none" required>
+          </div>
+          <input type="email" placeholder="Email Address"
+            class="w-full bg-[#1a1a1a] border border-zinc-800 rounded p-3 text-sm focus:outline-none" required>
+          <textarea placeholder="Your Message" rows="4"
+            class="w-full bg-[#1a1a1a] border border-zinc-800 rounded p-3 text-sm focus:outline-none"></textarea>
+          <button type="submit"
+            class="w-full bg-[#ff2e00] hover:bg-red-600 text-white font-medium py-3 rounded transition-colors accent-glow">Send
+            Message</button>
+        </form>
+      </div>
+      <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-8 h-fit">
+        <h3 class="text-lg font-medium mb-6">Gym Information</h3>
+        <div class="space-y-6">
+          <div class="flex gap-4">
+            <iconify-icon icon="solar:map-point-linear" class="text-[#ff2e00] text-xl"></iconify-icon>
+            <div>
+              <p class="text-white text-sm font-medium">Location (Pune)</p>
+              <p class="text-zinc-400 text-sm">FC Road, Shivajinagar, Pune, Maharashtra 411004</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <iconify-icon icon="solar:clock-circle-linear" class="text-[#ff2e00] text-xl"></iconify-icon>
+            <div>
+              <p class="text-white text-sm font-medium">Opening Hours</p>
+              <p class="text-zinc-400 text-sm">Mon-Fri: 5:00 AM - 11:00 PM</p>
+              <p class="text-zinc-400 text-sm">Sat-Sun: 6:00 AM - 9:00 PM</p>
+            </div>
+          </div>
+          <!-- Pune Map -->
+          <div class="mt-6 w-full h-48 bg-zinc-900 rounded overflow-hidden border border-zinc-800">
+            <iframe
+              src="https://www.openstreetmap.org/export/embed.html?bbox=73.8462%2C18.5204%2C73.8562%2C18.5304&layer=mapnik&marker=18.5255%2C73.8512"
+              class="w-full h-full" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER PAGE -->
+  <div id="register" class="page-section pt-24 px-6 min-h-screen flex items-center justify-center">
+    <div
+      class="w-full max-w-2xl bg-[#1a1a1a] border border-white/5 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+      <div
+        class="absolute -top-20 -right-20 w-64 h-64 bg-[#ff2e00] rounded-full blur-[100px] opacity-10 pointer-events-none">
+      </div>
+      <h2 class="text-2xl font-semibold tracking-tight text-center mb-2">Create Account</h2>
+      <p class="text-zinc-400 text-center text-sm mb-8">Start your journey with FitZone today.</p>
+      <form id="registerForm" class="space-y-4">
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">First Name</label>
+            <input type="text" id="regFirstName"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none" required>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">Last Name</label>
+            <input type="text" id="regLastName"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none" required>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">Email</label>
+            <input type="email" id="regEmail"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none" required>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">Phone</label>
+            <input type="tel" id="regPhone"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none">
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs text-zinc-500">Address</label>
+          <input type="text" id="regAddress"
+            class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none">
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">Password</label>
+            <input type="password" id="regPassword"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none" required>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">Confirm Password</label>
+            <input type="password" id="regConfirmPassword"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none" required>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs text-zinc-500">Membership Plan</label>
+          <select id="regPlan"
+            class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none text-white">
+            <option value="Basic">Basic Plan ($29/mo)</option>
+            <option value="Pro" selected>Pro Plan ($59/mo)</option>
+            <option value="Elite">Elite Plan ($99/mo)</option>
+          </select>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">Weight (kg)</label>
+            <input type="number" id="regWeight"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none" value="70">
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs text-zinc-500">Height (cm)</label>
+            <input type="number" id="regHeight"
+              class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-2.5 text-sm focus:outline-none" value="170">
+          </div>
+        </div>
+        <button type="submit"
+          class="w-full bg-[#ff2e00] hover:bg-red-600 text-white font-medium py-3 rounded mt-4 transition-all accent-glow">Register</button>
+      </form>
+      <p class="text-center text-xs text-zinc-500 mt-6">Already have an account? <span onclick="router('login')"
+          class="text-white cursor-pointer hover:underline">Login</span></p>
+    </div>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="login" class="page-section pt-24 px-6 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md bg-[#1a1a1a] border border-white/5 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+      <div
+        class="absolute -top-20 -left-20 w-64 h-64 bg-[#ff2e00] rounded-full blur-[100px] opacity-10 pointer-events-none">
+      </div>
+      <div class="text-center mb-8">
+        <div
+          class="inline-flex items-center justify-center w-12 h-12 bg-[#ff2e00] rounded mb-4 text-black font-bold text-xl">
+          FZ</div>
+        <h2 class="text-2xl font-semibold tracking-tight">Welcome Back</h2>
+        <p class="text-zinc-400 text-sm mt-1">Please enter your details.</p>
+      </div>
+      <form id="loginForm" class="space-y-5">
+        <div class="space-y-1">
+          <label class="text-xs text-zinc-500">Email</label>
+          <input type="email" id="loginEmail"
+            class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm focus:outline-none" required>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs text-zinc-500">Password</label>
+          <input type="password" id="loginPassword"
+            class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm focus:outline-none" required>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs text-zinc-500">Role</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="cursor-pointer">
+              <input type="radio" name="role" value="member" class="peer hidden" checked>
+              <div
+                class="text-center py-2 border border-zinc-800 rounded bg-[#0d0d0d] text-zinc-400 text-sm peer-checked:bg-[#ff2e00] peer-checked:text-white peer-checked:border-[#ff2e00] transition-all">
+                Member</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="role" value="admin" class="peer hidden">
+              <div
+                class="text-center py-2 border border-zinc-800 rounded bg-[#0d0d0d] text-zinc-400 text-sm peer-checked:bg-[#ff2e00] peer-checked:text-white peer-checked:border-[#ff2e00] transition-all">
+                Admin</div>
+            </label>
+          </div>
+        </div>
+        <button type="submit"
+          class="w-full bg-white text-black hover:bg-zinc-200 font-medium py-3 rounded transition-colors">Sign
+          In</button>
+      </form>
+      <p class="text-center text-xs text-zinc-500 mt-6">Don't have an account? <span onclick="router('register')"
+          class="text-white cursor-pointer hover:underline">Register</span></p>
+    </div>
+  </div>
+
+  <!-- MEMBER DASHBOARD -->
+  <div id="member-dashboard" class="page-section min-h-screen bg-[#0d0d0d]">
+
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-[#0d0d0d] border-r border-white/5 hidden md:flex flex-col">
+        <div class="p-6 flex items-center gap-2">
+          <div class="w-8 h-8 bg-[#ff2e00] rounded flex items-center justify-center text-black font-bold">FZ</div>
+          <span class="text-lg font-semibold tracking-tight">FITZONE</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-1 mt-6">
+          <a href="#" onclick="showDashboardSection('overview'); return false;"
+            class="sidebar-link active flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:home-smile-linear" width="20"></iconify-icon> Overview
+          </a>
+          <a href="#" onclick="showDashboardSection('schedule'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:calendar-linear" width="20"></iconify-icon> Schedule
+          </a>
+          <a href="#" onclick="showDashboardSection('progress'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:chart-2-linear" width="20"></iconify-icon> Progress
+          </a>
+          <a href="#" onclick="showDashboardSection('profile'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:user-circle-linear" width="20"></iconify-icon> Profile
+          </a>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+          <button onclick="handleLogout()"
+            class="flex items-center gap-3 px-4 py-2 text-zinc-400 hover:text-[#ff2e00] text-sm w-full transition-colors">
+            <iconify-icon icon="solar:logout-2-linear" width="20"></iconify-icon> Logout
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main class="flex-1 overflow-y-auto p-6 md:p-10">
+        <!-- Overview Section -->
+        <div id="dashboard-overview" class="dashboard-section">
+          <header class="flex justify-between items-center mb-10">
+            <div>
+              <h1 class="text-2xl font-semibold tracking-tight" id="welcomeUserName">Hello, <span
+                  id="userFirstName">User</span></h1>
+              <p class="text-zinc-400 text-sm" id="welcomeMessage">Let's crush your workout today.</p>
+            </div>
+            <div id="userInitials"
+              class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-white border border-white/10">
+              JD
+            </div>
+          </header>
+
+          <div class="grid lg:grid-cols-3 gap-6 mb-8">
+            <!-- Membership Card -->
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/5">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-zinc-400 text-xs uppercase tracking-wide">Membership</p>
+                  <h3 class="text-xl font-medium mt-1" id="userPlan">Pro Plan</h3>
+                </div>
+                <span
+                  class="bg-green-500/10 text-green-500 text-xs px-2 py-1 rounded font-medium border border-green-500/20">Active</span>
+              </div>
+              <div class="h-1 w-full bg-zinc-800 rounded-full overflow-hidden mb-2">
+                <div class="h-full bg-[#ff2e00] progress-bar" id="membershipProgress" style="width: 70%"></div>
+              </div>
+              <p class="text-xs text-zinc-500" id="membershipExpiry">Expires: Dec 31, 2023</p>
+            </div>
+
+            <!-- Weight Card -->
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/5 flex items-center justify-between">
+              <div>
+                <p class="text-zinc-400 text-xs uppercase tracking-wide mb-1">Current Weight</p>
+                <h3 class="text-2xl font-semibold tracking-tight" id="userWeight">70.0 <span
+                    class="text-sm font-normal text-zinc-500">kg</span></h3>
+              </div>
+              <div class="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center text-[#ff2e00]">
+                <iconify-icon icon="solar:scale-linear" width="24"></iconify-icon>
+              </div>
+            </div>
+
+            <!-- BMI Card -->
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/5 flex items-center justify-between">
+              <div>
+                <p class="text-zinc-400 text-xs uppercase tracking-wide mb-1">BMI Score</p>
+                <h3 class="text-2xl font-semibold tracking-tight" id="userBMI">24.2 <span
+                    class="text-sm font-normal text-green-500" id="bmiCategory">Normal</span></h3>
+              </div>
+              <div class="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center text-blue-500">
+                <iconify-icon icon="solar:heart-pulse-linear" width="24"></iconify-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Today's Schedule</h3>
+              <div id="todaysClasses" class="space-y-3">
+                <!-- Classes will be populated here -->
+              </div>
+              <button onclick="showDashboardSection('schedule')"
+                class="mt-4 text-sm text-[#ff2e00] hover:text-white transition-colors">View Full Schedule →</button>
+            </div>
+
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Weekly Progress</h3>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="text-zinc-400">Workouts Completed</span>
+                    <span class="text-white" id="workoutsCompleted">3/5</span>
+                  </div>
+                  <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-[#ff2e00] progress-bar" id="workoutProgress" style="width: 60%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="text-zinc-400">Calories Burned</span>
+                    <span class="text-white" id="caloriesBurned">1850/2500</span>
+                  </div>
+                  <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-green-500 progress-bar" id="caloriesProgress" style="width: 74%"></div>
+                  </div>
+                </div>
+              </div>
+              <button onclick="showDashboardSection('progress')"
+                class="mt-4 text-sm text-[#ff2e00] hover:text-white transition-colors">View Detailed Progress →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Schedule Section -->
+        <div id="dashboard-schedule" class="dashboard-section hidden">
+          <h2 class="text-2xl font-semibold tracking-tight mb-6">My Schedule</h2>
+          <div class="grid lg:grid-cols-2 gap-6">
+            <!-- Upcoming Classes -->
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Upcoming Classes</h3>
+              <div id="upcomingClasses" class="space-y-3">
+                <!-- Dynamic class list -->
+              </div>
+            </div>
+
+            <!-- Available Classes -->
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Available Classes</h3>
+              <div id="availableClasses" class="space-y-3">
+                <!-- Available classes to book -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div id="dashboard-progress" class="dashboard-section hidden">
+          <h2 class="text-2xl font-semibold tracking-tight mb-6">My Progress</h2>
+          <div class="grid lg:grid-cols-3 gap-6 mb-6">
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs uppercase tracking-wide mb-2">Total Workouts</p>
+              <h3 class="text-3xl font-semibold" id="totalWorkouts">47</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs uppercase tracking-wide mb-2">Total Hours</p>
+              <h3 class="text-3xl font-semibold" id="totalHours">42.5</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-6 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs uppercase tracking-wide mb-2">Calories Burned</p>
+              <h3 class="text-3xl font-semibold" id="totalCalories">12,450</h3>
+            </div>
+          </div>
+
+          <!-- Weight History Chart -->
+          <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6 mb-6">
+            <h3 class="text-lg font-medium mb-4">Weight History</h3>
+            <div class="h-48 flex items-end justify-between gap-2">
+              <div class="w-full bg-[#ff2e00]/20 rounded-t relative group" style="height: 80%">
+                <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-zinc-400">Week 1</span>
+              </div>
+              <div class="w-full bg-[#ff2e00]/20 rounded-t relative group" style="height: 75%">
+                <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-zinc-400">Week 2</span>
+              </div>
+              <div class="w-full bg-[#ff2e00]/20 rounded-t relative group" style="height: 73%">
+                <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-zinc-400">Week 3</span>
+              </div>
+              <div class="w-full bg-[#ff2e00] rounded-t relative group" style="height: 70%">
+                <span class="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-zinc-400">Week 4</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Goals -->
+          <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+            <h3 class="text-lg font-medium mb-4">Fitness Goals</h3>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between mb-1">
+                  <span class="text-sm text-zinc-400">Target Weight: 75kg</span>
+                  <span class="text-sm text-white">Current: 70kg</span>
+                </div>
+                <div class="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                  <div class="h-full bg-[#ff2e00] progress-bar" style="width: 70%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="dashboard-profile" class="dashboard-section hidden">
+          <h2 class="text-2xl font-semibold tracking-tight mb-6">My Profile</h2>
+          <div class="grid lg:grid-cols-2 gap-6">
+            <!-- Personal Information -->
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Personal Information</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="text-xs text-zinc-500">Full Name</label>
+                  <p class="text-white" id="profileFullName">John Doe</p>
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-500">Email</label>
+                  <p class="text-white" id="profileEmail">john@example.com</p>
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-500">Phone</label>
+                  <p class="text-white" id="profilePhone">+1 234 567 8900</p>
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-500">Address</label>
+                  <p class="text-white" id="profileAddress">123 Fitness St, NY</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Update Physical Stats -->
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Update Physical Stats</h3>
+              <form id="updateProfileForm" class="space-y-4">
+                <div>
+                  <label class="text-xs text-zinc-500">Weight (kg)</label>
+                  <input type="number" id="updateWeight"
+                    class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm focus:outline-none">
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-500">Height (cm)</label>
+                  <input type="number" id="updateHeight"
+                    class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm focus:outline-none">
+                </div>
+                <button type="submit"
+                  class="w-full bg-white text-black font-medium py-2 rounded text-sm hover:bg-zinc-200">Save
+                  Changes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+
+
+    <!-- In MEMBER DASHBOARD sidebar, before the logout button -->
+    <div class="p-4 border-t border-white/5">
+      <!-- Add Back to Home button -->
+      <button onclick="router('home')"
+        class="flex items-center gap-3 px-4 py-2 text-zinc-400 hover:text-[#ff2e00] text-sm w-full transition-colors mb-2">
+        <iconify-icon icon="solar:home-smile-linear" width="20"></iconify-icon> Back to Home
+      </button>
+      <button onclick="handleLogout()"
+        class="flex items-center gap-3 px-4 py-2 text-zinc-400 hover:text-[#ff2e00] text-sm w-full transition-colors">
+        <iconify-icon icon="solar:logout-2-linear" width="20"></iconify-icon> Logout
+      </button>
+    </div>
+
+
+
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <!-- ADMIN DASHBOARD - COMPREHENSIVE MANAGEMENT PANEL -->
+  <div id="admin-dashboard" class="page-section min-h-screen bg-[#0d0d0d]">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Admin Sidebar -->
+      <aside class="w-64 bg-[#0d0d0d] border-r border-white/5 hidden md:flex flex-col">
+        <div class="p-6 flex items-center gap-2">
+          <div class="w-8 h-8 bg-white rounded flex items-center justify-center text-black font-bold">AD</div>
+          <span class="text-lg font-semibold tracking-tight">ADMIN PANEL</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-1 mt-6">
+          <a href="#" onclick="showAdminSection('dashboard'); return false;"
+            class="sidebar-link active flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:widget-linear" width="20"></iconify-icon> Dashboard
+          </a>
+          <a href="#" onclick="showAdminSection('members'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:users-group-rounded-linear" width="20"></iconify-icon> Members
+          </a>
+          <a href="#" onclick="showAdminSection('trainers'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:users-group-two-linear" width="20"></iconify-icon> Trainers
+          </a>
+          <a href="#" onclick="showAdminSection('equipment'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:dumbbell-large-linear" width="20"></iconify-icon> Equipment
+          </a>
+          <a href="#" onclick="showAdminSection('classes'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:calendar-linear" width="20"></iconify-icon> Classes
+          </a>
+          <a href="#" onclick="showAdminSection('schedule'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:clock-circle-linear" width="20"></iconify-icon> Timetable
+          </a>
+          <a href="#" onclick="showAdminSection('gym'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:shop-linear" width="20"></iconify-icon> Gym Info
+          </a>
+          <a href="#" onclick="showAdminSection('reports'); return false;"
+            class="sidebar-link flex items-center gap-3 px-4 py-3 text-zinc-400 hover:text-white text-sm font-medium rounded-r-lg transition-colors">
+            <iconify-icon icon="solar:chart-square-linear" width="20"></iconify-icon> Reports
+          </a>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+          <div class="flex items-center gap-3 mb-4 px-4 py-2 bg-white/5 rounded-lg">
+            <div class="w-8 h-8 rounded-full bg-[#ff2e00] flex items-center justify-center text-white font-bold">
+              A
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium">Admin User</p>
+              <p class="text-xs text-zinc-500">admin@fitzone.com</p>
+            </div>
+          </div>
+          <button onclick="handleLogout()"
+            class="flex items-center gap-3 px-4 py-2 text-zinc-400 hover:text-[#ff2e00] text-sm w-full transition-colors">
+            <iconify-icon icon="solar:logout-2-linear" width="20"></iconify-icon> Logout
+          </button>
+        </div>
+      </aside>
+
+      <!-- Admin Main Content -->
+      <main class="flex-1 overflow-y-auto p-6 md:p-10 bg-[#0d0d0d]">
+
+        <!-- DASHBOARD OVERVIEW SECTION -->
+        <div id="admin-dashboard-section" class="admin-section">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h1 class="text-3xl font-semibold tracking-tight">Admin Dashboard</h1>
+              <p class="text-zinc-400 text-sm mt-1">Welcome back! Here's your gym overview.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-sm text-zinc-400">Last updated:</span>
+              <span class="text-sm bg-white/5 px-3 py-1 rounded-full" id="lastUpdated"></span>
+            </div>
+          </div>
+
+          <!-- Main Stats Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Members Card -->
+            <div
+              class="bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] p-6 rounded-xl border border-white/5 hover:border-[#ff2e00]/30 transition-all group">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-zinc-400 text-xs uppercase tracking-wide">Total Members</p>
+                  <h3 class="text-3xl font-bold mt-2 text-white" id="totalMembers">300+</h3>
+                  <p class="text-xs text-green-500 mt-2 flex items-center gap-1">
+                    <iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon>
+                    <span id="memberGrowth">+12%</span> vs last month
+                  </p>
+                </div>
+                <div
+                  class="w-12 h-12 bg-[#ff2e00]/10 rounded-xl flex items-center justify-center group-hover:bg-[#ff2e00] group-hover:text-white transition-colors">
+                  <iconify-icon icon="solar:users-group-rounded-linear" class="text-[#ff2e00] group-hover:text-white"
+                    width="24"></iconify-icon>
+                </div>
+              </div>
+              <div class="flex gap-4 text-xs">
+                <span class="text-zinc-500">Active: <span class="text-green-500 font-medium"
+                    id="activeMembers">110+</span></span>
+                <span class="text-zinc-500">New: <span class="text-blue-500 font-medium"
+                    id="newMembers">+12</span></span>
+              </div>
+            </div>
+
+            <!-- Equipment Card -->
+            <div
+              class="bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] p-6 rounded-xl border border-white/5 hover:border-[#ff2e00]/30 transition-all group">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-zinc-400 text-xs uppercase tracking-wide">Equipment</p>
+                  <h3 class="text-3xl font-bold mt-2 text-white" id="totalEquipment">0</h3>
+                  <p class="text-xs text-yellow-500 mt-2 flex items-center gap-1">
+                    <iconify-icon icon="solar:shield-warning-linear"></iconify-icon>
+                    <span id="maintenanceNeeded">0</span> need maintenance
+                  </p>
+                </div>
+                <div
+                  class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                  <iconify-icon icon="solar:dumbbell-large-linear" class="text-purple-500 group-hover:text-white"
+                    width="24"></iconify-icon>
+                </div>
+              </div>
+              <div class="flex gap-4 text-xs">
+                <span class="text-zinc-500">In Use: <span class="text-blue-500 font-medium"
+                    id="equipmentInUse">0</span></span>
+                <span class="text-zinc-500">Available: <span class="text-green-500 font-medium"
+                    id="equipmentAvailable">0</span></span>
+              </div>
+            </div>
+
+            <!-- Trainers Card -->
+            <div
+              class="bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] p-6 rounded-xl border border-white/5 hover:border-[#ff2e00]/30 transition-all group">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-zinc-400 text-xs uppercase tracking-wide">Trainers</p>
+                  <h3 class="text-3xl font-bold mt-2 text-white" id="totalTrainers">0</h3>
+                  <p class="text-xs text-green-500 mt-2 flex items-center gap-1">
+                    <iconify-icon icon="solar:star-bold"></iconify-icon>
+                    <span id="avgRating">4.8</span> average rating
+                  </p>
+                </div>
+                <div
+                  class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                  <iconify-icon icon="solar:users-group-two-linear" class="text-blue-500 group-hover:text-white"
+                    width="24"></iconify-icon>
+                </div>
+              </div>
+              <div class="flex gap-4 text-xs">
+                <span class="text-zinc-500">Full Time: <span class="text-white font-medium"
+                    id="fullTimeTrainers">8</span></span>
+                <span class="text-zinc-500">Part Time: <span class="text-white font-medium"
+                    id="partTimeTrainers">4</span></span>
+              </div>
+            </div>
+
+            <!-- Classes Card -->
+            <div
+              class="bg-gradient-to-br from-[#1a1a1a] to-[#0d0d0d] p-6 rounded-xl border border-white/5 hover:border-[#ff2e00]/30 transition-all group">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <p class="text-zinc-400 text-xs uppercase tracking-wide">Weekly Classes</p>
+                  <h3 class="text-3xl font-bold mt-2 text-white" id="totalClasses">0</h3>
+                  <p class="text-xs text-blue-500 mt-2 flex items-center gap-1">
+                    <iconify-icon icon="solar:calendar-linear"></iconify-icon>
+                    <span id="classUtilization">85%</span> utilization
+                  </p>
+                </div>
+                <div
+                  class="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition-colors">
+                  <iconify-icon icon="solar:calendar-linear" class="text-green-500 group-hover:text-white"
+                    width="24"></iconify-icon>
+                </div>
+              </div>
+              <div class="flex gap-4 text-xs">
+                <span class="text-zinc-500">Today: <span class="text-white font-medium"
+                    id="todayClasses">6</span></span>
+                <span class="text-zinc-500">Full: <span class="text-orange-500 font-medium"
+                    id="fullClasses">2</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Revenue and Time Stats -->
+          <div class="grid lg:grid-cols-3 gap-6 mb-8">
+            <!-- Revenue Chart -->
+            <div class="lg:col-span-2 bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-medium">Revenue Overview</h3>
+                <select class="bg-[#0d0d0d] border border-zinc-800 rounded px-3 py-1 text-sm text-white"
+                  id="revenuePeriod">
+                  <option value="week">This Week</option>
+                  <option value="month" selected>This Month</option>
+                  <option value="year">This Year</option>
+                </select>
+              </div>
+              <div class="h-64 flex items-end justify-between gap-2 px-2">
+                <div class="w-full bg-[#ff2e00]/20 rounded-t relative group" style="height: 45%" data-value="$4.5k">
+                  <div
+                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    Week 1: $4.5k
+                  </div>
+                </div>
+                <div class="w-full bg-[#ff2e00]/20 rounded-t relative group" style="height: 65%">
+                  <div
+                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100">
+                    Week 2: $6.5k</div>
+                </div>
+                <div class="w-full bg-[#ff2e00]/20 rounded-t relative group" style="height: 55%">
+                  <div
+                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100">
+                    Week 3: $5.5k</div>
+                </div>
+                <div class="w-full bg-[#ff2e00] rounded-t relative group" style="height: 85%">
+                  <div
+                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100">
+                    Week 4: $8.5k</div>
+                </div>
+              </div>
+              <div class="flex justify-between text-xs text-zinc-500 mt-4 px-2">
+                <span>Week 1</span><span>Week 2</span><span>Week 3</span><span>Week 4</span>
+              </div>
+            </div>
+
+            <!-- Time & Schedule Overview -->
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Today's Schedule</h3>
+              <div class="space-y-4">
+                <div class="flex items-center justify-between p-3 bg-[#0d0d0d] rounded-lg">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-[#ff2e00]/10 rounded-lg flex items-center justify-center">
+                      <span class="text-xs font-bold text-[#ff2e00]">09:00</span>
+                    </div>
+                    <div>
+                      <p class="font-medium">HIIT Cardio</p>
+                      <p class="text-xs text-zinc-500">Mike • 15/20 booked</p>
+                    </div>
+                  </div>
+                  <span class="text-xs bg-green-500/10 text-green-500 px-2 py-1 rounded">Active</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-[#0d0d0d] rounded-lg">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-purple-500/10 rounded-lg flex items-center justify-center">
+                      <span class="text-xs font-bold text-purple-500">11:00</span>
+                    </div>
+                    <div>
+                      <p class="font-medium">Yoga Flow</p>
+                      <p class="text-xs text-zinc-500">Sarah • 12/15 booked</p>
+                    </div>
+                  </div>
+                  <span class="text-xs bg-yellow-500/10 text-yellow-500 px-2 py-1 rounded">Soon</span>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-[#0d0d0d] rounded-lg">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                      <span class="text-xs font-bold text-blue-500">17:00</span>
+                    </div>
+                    <div>
+                      <p class="font-medium">Strength Training</p>
+                      <p class="text-xs text-zinc-500">Alex • 8/12 booked</p>
+                    </div>
+                  </div>
+                  <span class="text-xs bg-zinc-500/10 text-zinc-500 px-2 py-1 rounded">Later</span>
+                </div>
+              </div>
+              <button class="w-full mt-4 text-sm text-[#ff2e00] hover:text-white transition-colors text-center">
+                View Full Schedule →
+              </button>
+            </div>
+          </div>
+
+          <!-- Recent Activity & Quick Actions -->
+          <div class="grid lg:grid-cols-2 gap-6">
+            <!-- Recent Members -->
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium">Recent Members</h3>
+                <button onclick="showAdminSection('members')" class="text-sm text-[#ff2e00] hover:text-white">View
+                  All</button>
+              </div>
+              <div class="space-y-3" id="recentMembersList">
+                <!-- Dynamic content will be inserted here -->
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Quick Actions</h3>
+              <div class="grid grid-cols-2 gap-3">
+                <button onclick="openAddMemberModal()"
+                  class="p-4 bg-[#0d0d0d] rounded-lg border border-white/5 hover:border-[#ff2e00]/30 transition-all text-left group">
+                  <iconify-icon icon="solar:user-plus-linear" class="text-[#ff2e00] mb-2" width="24"></iconify-icon>
+                  <p class="text-sm font-medium">Add Member</p>
+                  <p class="text-xs text-zinc-500">Register new member</p>
+                </button>
+                <button onclick="openAddTrainerModal()"
+                  class="p-4 bg-[#0d0d0d] rounded-lg border border-white/5 hover:border-[#ff2e00]/30 transition-all text-left group">
+                  <iconify-icon icon="solar:users-group-two-linear" class="text-blue-500 mb-2"
+                    width="24"></iconify-icon>
+                  <p class="text-sm font-medium">Add Trainer</p>
+                  <p class="text-xs text-zinc-500">Hire new trainer</p>
+                </button>
+                <button onclick="openAddEquipmentModal()"
+                  class="p-4 bg-[#0d0d0d] rounded-lg border border-white/5 hover:border-[#ff2e00]/30 transition-all text-left group">
+                  <iconify-icon icon="solar:dumbbell-large-linear" class="text-purple-500 mb-2"
+                    width="24"></iconify-icon>
+                  <p class="text-sm font-medium">Add Equipment</p>
+                  <p class="text-xs text-zinc-500">New gym equipment</p>
+                </button>
+                <button onclick="openAddClassModal()"
+                  class="p-4 bg-[#0d0d0d] rounded-lg border border-white/5 hover:border-[#ff2e00]/30 transition-all text-left group">
+                  <iconify-icon icon="solar:calendar-add-linear" class="text-green-500 mb-2" width="24"></iconify-icon>
+                  <p class="text-sm font-medium">Schedule Class</p>
+                  <p class="text-xs text-zinc-500">Add new class</p>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEMBERS MANAGEMENT SECTION -->
+        <div id="admin-members-section" class="admin-section hidden">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold tracking-tight">Members Management</h2>
+            <button onclick="openAddMemberModal()"
+              class="bg-[#ff2e00] hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+              <iconify-icon icon="solar:add-circle-linear" width="18"></iconify-icon> Add New Member
+            </button>
+          </div>
+
+          <!-- Members Table -->
+          <div class="bg-[#1a1a1a] rounded-xl border border-white/5 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm">
+                <thead class="bg-[#0d0d0d] text-zinc-500 text-xs uppercase tracking-wider">
+                  <tr>
+                    <th class="px-6 py-4">Member</th>
+                    <th class="px-6 py-4">Plan</th>
+                    <th class="px-6 py-4">Join Date</th>
+                    <th class="px-6 py-4">Status</th>
+                    <th class="px-6 py-4">Last Active</th>
+                    <th class="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="membersTableBody" class="divide-y divide-white/5">
+                  <!-- Members will be populated here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRAINERS MANAGEMENT SECTION -->
+        <div id="admin-trainers-section" class="admin-section hidden">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold tracking-tight">Trainers Management</h2>
+            <button onclick="openAddTrainerModal()"
+              class="bg-[#ff2e00] hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+              <iconify-icon icon="solar:add-circle-linear" width="18"></iconify-icon> Add New Trainer
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">Total Trainers</p>
+              <h3 class="text-2xl font-semibold" id="trainerCount">12</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">Active Today</p>
+              <h3 class="text-2xl font-semibold" id="activeTrainers">8</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">Avg Rating</p>
+              <h3 class="text-2xl font-semibold" id="avgTrainerRating">4.8</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">Total Classes</p>
+              <h3 class="text-2xl font-semibold" id="trainerClasses">48</h3>
+            </div>
+          </div>
+
+          <div class="bg-[#1a1a1a] rounded-xl border border-white/5 overflow-hidden">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[#0d0d0d] text-zinc-500 text-xs uppercase tracking-wider">
+                <tr>
+                  <th class="px-6 py-4">Trainer</th>
+                  <th class="px-6 py-4">Specialization</th>
+                  <th class="px-6 py-4">Experience</th>
+                  <th class="px-6 py-4">Classes/Week</th>
+                  <th class="px-6 py-4">Rating</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="trainersTableBody" class="divide-y divide-white/5">
+                <!-- Trainers will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- EQUIPMENT MANAGEMENT SECTION -->
+        <div id="admin-equipment-section" class="admin-section hidden">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold tracking-tight">Equipment Management</h2>
+            <button onclick="openAddEquipmentModal()"
+              class="bg-[#ff2e00] hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+              <iconify-icon icon="solar:add-circle-linear" width="18"></iconify-icon> Add Equipment
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">Total Equipment</p>
+              <h3 class="text-2xl font-semibold" id="totalEquipmentCount">45</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">In Use</p>
+              <h3 class="text-2xl font-semibold text-blue-500" id="equipmentInUseCount">32</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">Maintenance</p>
+              <h3 class="text-2xl font-semibold text-yellow-500" id="equipmentMaintenanceCount">8</h3>
+            </div>
+            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-white/5">
+              <p class="text-zinc-400 text-xs">Needs Repair</p>
+              <h3 class="text-2xl font-semibold text-red-500" id="equipmentRepairCount">5</h3>
+            </div>
+          </div>
+
+          <div class="bg-[#1a1a1a] rounded-xl border border-white/5 overflow-hidden">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[#0d0d0d] text-zinc-500 text-xs uppercase tracking-wider">
+                <tr>
+                  <th class="px-6 py-4">Equipment</th>
+                  <th class="px-6 py-4">Category</th>
+                  <th class="px-6 py-4">Last Maintained</th>
+                  <th class="px-6 py-4">Next Service</th>
+                  <th class="px-6 py-4">Status</th>
+                  <th class="px-6 py-4">Condition</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="equipmentTableBody" class="divide-y divide-white/5">
+                <!-- Equipment will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CLASSES MANAGEMENT SECTION -->
+        <div id="admin-classes-section" class="admin-section hidden">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-semibold tracking-tight">Classes Management</h2>
+            <button onclick="openAddClassModal()"
+              class="bg-[#ff2e00] hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+              <iconify-icon icon="solar:add-circle-linear" width="18"></iconify-icon> Add New Class
+            </button>
+          </div>
+
+          <div class="bg-[#1a1a1a] rounded-xl border border-white/5 overflow-hidden">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[#0d0d0d] text-zinc-500 text-xs uppercase tracking-wider">
+                <tr>
+                  <th class="px-6 py-4">Class Name</th>
+                  <th class="px-6 py-4">Trainer</th>
+                  <th class="px-6 py-4">Day</th>
+                  <th class="px-6 py-4">Time</th>
+                  <th class="px-6 py-4">Duration</th>
+                  <th class="px-6 py-4">Capacity</th>
+                  <th class="px-6 py-4">Enrolled</th>
+                  <th class="px-6 py-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="classesTableBody" class="divide-y divide-white/5">
+                <!-- Classes will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TIMETABLE SECTION -->
+        <div id="admin-schedule-section" class="admin-section hidden">
+          <h2 class="text-2xl font-semibold tracking-tight mb-6">Weekly Timetable</h2>
+
+          <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+            <div class="grid grid-cols-7 gap-2 mb-4">
+              <div class="text-center text-sm font-medium text-zinc-400">Mon</div>
+              <div class="text-center text-sm font-medium text-zinc-400">Tue</div>
+              <div class="text-center text-sm font-medium text-zinc-400">Wed</div>
+              <div class="text-center text-sm font-medium text-zinc-400">Thu</div>
+              <div class="text-center text-sm font-medium text-zinc-400">Fri</div>
+              <div class="text-center text-sm font-medium text-zinc-400">Sat</div>
+              <div class="text-center text-sm font-medium text-zinc-400">Sun</div>
+            </div>
+            <div id="weeklyTimetable" class="space-y-2">
+              <!-- Timetable will be populated here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- GYM INFORMATION SECTION -->
+        <div id="admin-gym-section" class="admin-section hidden">
+          <h2 class="text-2xl font-semibold tracking-tight mb-6">Gym Information</h2>
+
+          <div class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Gym Details</h3>
+              <form id="gymInfoForm" class="space-y-4">
+                <div>
+                  <label class="text-xs text-zinc-500">Gym Name</label>
+                  <input type="text" value="FitZone Gym"
+                    class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm">
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-500">Address</label>
+                  <input type="text" value="FC Road, Pune"
+                    class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm">
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-500">Phone</label>
+                  <input type="text" value="+91 12345 67890"
+                    class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm">
+                </div>
+                <div>
+                  <label class="text-xs text-zinc-500">Email</label>
+                  <input type="email" value="info@fitzone.com"
+                    class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm">
+                </div>
+                <button type="submit" class="bg-[#ff2e00] text-white px-4 py-2 rounded text-sm">Update
+                  Information</button>
+              </form>
+            </div>
+
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Operating Hours</h3>
+              <div class="space-y-3">
+                <div class="flex justify-between p-3 bg-[#0d0d0d] rounded-lg">
+                  <span>Monday - Friday</span>
+                  <span class="text-[#ff2e00]">5:00 AM - 11:00 PM</span>
+                </div>
+                <div class="flex justify-between p-3 bg-[#0d0d0d] rounded-lg">
+                  <span>Saturday</span>
+                  <span class="text-[#ff2e00]">6:00 AM - 9:00 PM</span>
+                </div>
+                <div class="flex justify-between p-3 bg-[#0d0d0d] rounded-lg">
+                  <span>Sunday</span>
+                  <span class="text-[#ff2e00]">7:00 AM - 8:00 PM</span>
+                </div>
+                <div class="flex justify-between p-3 bg-[#0d0d0d] rounded-lg">
+                  <span>Holidays</span>
+                  <span class="text-[#ff2e00]">8:00 AM - 6:00 PM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- REPORTS SECTION -->
+        <div id="admin-reports-section" class="admin-section hidden">
+          <h2 class="text-2xl font-semibold tracking-tight mb-6">Reports & Analytics</h2>
+
+          <div class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Monthly Report</h3>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                  <span class="text-zinc-400">Total Revenue</span>
+                  <span class="text-xl font-semibold">$67,400</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-zinc-400">New Members</span>
+                  <span class="text-xl font-semibold text-green-500">+124</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-zinc-400">Class Attendance</span>
+                  <span class="text-xl font-semibold">1,847</span>
+                </div>
+                <button class="w-full mt-4 bg-[#ff2e00] text-white px-4 py-2 rounded text-sm">Download Full
+                  Report</button>
+              </div>
+            </div>
+
+            <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6">
+              <h3 class="text-lg font-medium mb-4">Quick Stats</h3>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm text-zinc-400">Membership Renewal Rate</span>
+                    <span class="text-sm text-white">87%</span>
+                  </div>
+                  <div class="w-full h-2 bg-zinc-800 rounded-full">
+                    <div class="h-full bg-green-500" style="width: 87%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm text-zinc-400">Class Utilization</span>
+                    <span class="text-sm text-white">76%</span>
+                  </div>
+                  <div class="w-full h-2 bg-zinc-800 rounded-full">
+                    <div class="h-full bg-blue-500" style="width: 76%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span class="text-sm text-zinc-400">Equipment Usage</span>
+                    <span class="text-sm text-white">82%</span>
+                  </div>
+                  <div class="w-full h-2 bg-zinc-800 rounded-full">
+                    <div class="h-full bg-purple-500" style="width: 82%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- In ADMIN DASHBOARD sidebar, before the logout button -->
+    <div class="p-4 border-t border-white/5">
+      <div class="flex items-center gap-3 mb-4 px-4 py-2 bg-white/5 rounded-lg">
+        <div class="w-8 h-8 rounded-full bg-[#ff2e00] flex items-center justify-center text-white font-bold">
+          A
+        </div>
+        <div class="flex-1">
+          <p class="text-sm font-medium">Admin User</p>
+          <p class="text-xs text-zinc-500">admin@fitzone.com</p>
+        </div>
+      </div>
+
+      <!-- Add Back to Home button -->
+      <button onclick="router('home')"
+        class="flex items-center gap-3 px-4 py-2 text-zinc-400 hover:text-[#ff2e00] text-sm w-full transition-colors mb-2">
+        <iconify-icon icon="solar:home-smile-linear" width="20"></iconify-icon> Back to Home
+      </button>
+
+      <button onclick="handleLogout()"
+        class="flex items-center gap-3 px-4 py-2 text-zinc-400 hover:text-[#ff2e00] text-sm w-full transition-colors">
+        <iconify-icon icon="solar:logout-2-linear" width="20"></iconify-icon> Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Add Member Modal -->
+  <div id="addMemberModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#1a1a1a] rounded-xl border border-white/5 p-6 w-full max-w-md">
+      <h3 class="text-lg font-medium mb-4">Add New Member</h3>
+      <form id="addMemberForm" class="space-y-4">
+        <input type="text" placeholder="First Name"
+          class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm">
+        <input type="text" placeholder="Last Name"
+          class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm">
+        <input type="email" placeholder="Email" class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm">
+        <select class="w-full bg-[#0d0d0d] border border-zinc-800 rounded p-3 text-sm text-white">
+          <option>Basic Plan</option>
+          <option>Pro Plan</option>
+          <option>Elite Plan</option>
+        </select>
+        <div class="flex gap-2">
+          <button type="submit" class="flex-1 bg-[#ff2e00] text-white py-2 rounded">Add Member</button>
+          <button type="button" onclick="closeModal('addMemberModal')"
+            class="flex-1 bg-zinc-800 text-white py-2 rounded">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script type="module" src="script.js"></script>
+  <!-- <script>
+    // ==================== ADMIN FUNCTIONS ====================
+
+    // Admin data storage
+    let adminData = {
+      members: [],
+      trainers: [],
+      equipment: [],
+      classes: [],
+      gymInfo: {
+        name: 'FitZone Gym',
+        address: 'FC Road, Pune',
+        phone: '+91 12345 67890',
+        email: 'info@fitzone.com',
+        hours: {
+          weekday: '5:00 AM - 11:00 PM',
+          saturday: '6:00 AM - 9:00 PM',
+          sunday: '7:00 AM - 8:00 PM',
+          holiday: '8:00 AM - 6:00 PM'
+        }
+      }
+    };
+
+    // Show admin sections
+    window.showAdminSection = function (section) {
+      document.querySelectorAll('.admin-section').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`admin-${section}-section`).classList.remove('hidden');
+
+      document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+      event.target.closest('.sidebar-link').classList.add('active');
+
+      // Load appropriate data
+      if (section === 'members') loadMembersData();
+      if (section === 'trainers') loadTrainersData();
+      if (section === 'equipment') loadEquipmentData();
+      if (section === 'classes') loadClassesData();
+      if (section === 'schedule') loadTimetable();
+    };
+
+    // Load members data
+    function loadMembersData () {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const tbody = document.getElementById('membersTableBody');
+
+      tbody.innerHTML = users.map(user => `
+      <tr class="hover:bg-white/5 transition-colors">
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
+              ${user.firstName.charAt(0)}${user.lastName.charAt(0)}
+            </div>
+            <div>
+              <p class="font-medium">${user.firstName} ${user.lastName}</p>
+              <p class="text-xs text-zinc-500">${user.email}</p>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-4">${user.plan}</td>
+        <td class="px-6 py-4">${user.joinDate}</td>
+        <td class="px-6 py-4">
+          <span class="px-2 py-1 rounded text-xs font-medium bg-green-500/10 text-green-500">Active</span>
+        </td>
+        <td class="px-6 py-4">Today</td>
+        <td class="px-6 py-4 text-right">
+          <button class="text-zinc-500 hover:text-white mr-2">
+            <iconify-icon icon="solar:pen-linear"></iconify-icon>
+          </button>
+          <button class="text-zinc-500 hover:text-[#ff2e00]">
+            <iconify-icon icon="solar:trash-bin-trash-linear"></iconify-icon>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+      // Update stats
+      document.getElementById('totalMembers').textContent = users.length;
+      document.getElementById('activeMembers').textContent = users.length;
+    }
+
+    // Load trainers data
+    function loadTrainersData () {
+      const trainers = [
+        { name: 'Mike Chen', specialization: 'HIIT/Cardio', experience: 5, classes: 8, rating: 4.8, status: 'active' },
+        { name: 'Sarah Miller', specialization: 'Yoga', experience: 7, classes: 10, rating: 4.9, status: 'active' },
+        { name: 'Alex Thompson', specialization: 'Strength', experience: 4, classes: 6, rating: 4.7, status: 'active' },
+        { name: 'Emma Davis', specialization: 'CrossFit', experience: 3, classes: 5, rating: 4.6, status: 'active' }
+      ];
+
+      const tbody = document.getElementById('trainersTableBody');
+      tbody.innerHTML = trainers.map(trainer => `
+      <tr class="hover:bg-white/5 transition-colors">
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
+              ${trainer.name.split(' ').map(n => n.charAt(0)).join('')}
+            </div>
+            <span class="font-medium">${trainer.name}</span>
+          </div>
+        </td>
+        <td class="px-6 py-4">${trainer.specialization}</td>
+        <td class="px-6 py-4">${trainer.experience} years</td>
+        <td class="px-6 py-4">${trainer.classes}</td>
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-1">
+            <iconify-icon icon="solar:star-bold" class="text-yellow-500"></iconify-icon>
+            <span>${trainer.rating}</span>
+          </div>
+        </td>
+        <td class="px-6 py-4">
+          <span class="px-2 py-1 rounded text-xs font-medium bg-green-500/10 text-green-500">${trainer.status}</span>
+        </td>
+        <td class="px-6 py-4 text-right">
+          <button class="text-zinc-500 hover:text-white mr-2">
+            <iconify-icon icon="solar:pen-linear"></iconify-icon>
+          </button>
+          <button class="text-zinc-500 hover:text-[#ff2e00]">
+            <iconify-icon icon="solar:trash-bin-trash-linear"></iconify-icon>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+      document.getElementById('trainerCount').textContent = trainers.length;
+      document.getElementById('activeTrainers').textContent = trainers.length;
+    }
+
+    // Load equipment data
+    function loadEquipmentData () {
+      const equipment = [
+        { name: 'Treadmill', category: 'Cardio', lastMaintained: '2024-01-15', nextService: '2024-02-15', status: 'in-use', condition: 'good' },
+        { name: 'Leg Press', category: 'Strength', lastMaintained: '2024-01-10', nextService: '2024-02-10', status: 'maintenance', condition: 'needs-repair' },
+        { name: 'Dumbbells Set', category: 'Free Weights', lastMaintained: '2024-01-20', nextService: '2024-02-20', status: 'available', condition: 'excellent' },
+        { name: 'Elliptical', category: 'Cardio', lastMaintained: '2024-01-05', nextService: '2024-02-05', status: 'in-use', condition: 'good' }
+      ];
+
+      const tbody = document.getElementById('equipmentTableBody');
+      tbody.innerHTML = equipment.map(item => `
+      <tr class="hover:bg-white/5 transition-colors">
+        <td class="px-6 py-4 font-medium">${item.name}</td>
+        <td class="px-6 py-4">${item.category}</td>
+        <td class="px-6 py-4">${item.lastMaintained}</td>
+        <td class="px-6 py-4">${item.nextService}</td>
+        <td class="px-6 py-4">
+          <span class="px-2 py-1 rounded text-xs font-medium ${getStatusClass(item.status)}">${item.status}</span>
+        </td>
+        <td class="px-6 py-4">
+          <span class="px-2 py-1 rounded text-xs font-medium ${getConditionClass(item.condition)}">${item.condition}</span>
+        </td>
+        <td class="px-6 py-4 text-right">
+          <button class="text-zinc-500 hover:text-white mr-2">
+            <iconify-icon icon="solar:pen-linear"></iconify-icon>
+          </button>
+          <button class="text-zinc-500 hover:text-[#ff2e00]">
+            <iconify-icon icon="solar:trash-bin-trash-linear"></iconify-icon>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+      document.getElementById('totalEquipmentCount').textContent = equipment.length;
+      document.getElementById('equipmentInUseCount').textContent = equipment.filter(e => e.status === 'in-use').length;
+      document.getElementById('equipmentMaintenanceCount').textContent = equipment.filter(e => e.status === 'maintenance').length;
+      document.getElementById('equipmentRepairCount').textContent = equipment.filter(e => e.condition === 'needs-repair').length;
+    }
+
+    // Load classes data
+    function loadClassesData () {
+      const classes = [
+        { name: 'HIIT Cardio', trainer: 'Mike Chen', day: 'Monday', time: '09:00', duration: 60, capacity: 20, enrolled: 15 },
+        { name: 'Yoga Flow', trainer: 'Sarah Miller', day: 'Tuesday', time: '10:00', duration: 75, capacity: 15, enrolled: 12 },
+        { name: 'Strength Training', trainer: 'Alex Thompson', day: 'Wednesday', time: '17:00', duration: 90, capacity: 12, enrolled: 10 },
+        { name: 'CrossFit', trainer: 'Emma Davis', day: 'Thursday', time: '18:00', duration: 60, capacity: 15, enrolled: 8 }
+      ];
+
+      const tbody = document.getElementById('classesTableBody');
+      tbody.innerHTML = classes.map(cls => `
+      <tr class="hover:bg-white/5 transition-colors">
+        <td class="px-6 py-4 font-medium">${cls.name}</td>
+        <td class="px-6 py-4">${cls.trainer}</td>
+        <td class="px-6 py-4">${cls.day}</td>
+        <td class="px-6 py-4">${cls.time}</td>
+        <td class="px-6 py-4">${cls.duration} min</td>
+        <td class="px-6 py-4">${cls.capacity}</td>
+        <td class="px-6 py-4">
+          <div class="flex items-center gap-2">
+            <span>${cls.enrolled}/${cls.capacity}</span>
+            <div class="w-16 h-1.5 bg-zinc-800 rounded-full">
+              <div class="h-full bg-[#ff2e00]" style="width: ${(cls.enrolled / cls.capacity) * 100}%"></div>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-4 text-right">
+          <button class="text-zinc-500 hover:text-white mr-2">
+            <iconify-icon icon="solar:pen-linear"></iconify-icon>
+          </button>
+          <button class="text-zinc-500 hover:text-[#ff2e00]">
+            <iconify-icon icon="solar:trash-bin-trash-linear"></iconify-icon>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+    }
+
+    // Load timetable
+    function loadTimetable () {
+      const timetable = document.getElementById('weeklyTimetable');
+      const timeSlots = ['6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
+
+      timetable.innerHTML = timeSlots.map(time => `
+      <div class="grid grid-cols-7 gap-2">
+        ${Array(7).fill(0).map(() => `
+          <div class="p-2 bg-[#0d0d0d] rounded text-center text-xs text-zinc-400 hover:bg-[#ff2e00]/10 hover:text-white transition-colors cursor-pointer">
+            ${time}
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+    }
+
+    // Modal functions
+    window.openAddMemberModal = function () {
+      document.getElementById('addMemberModal').classList.remove('hidden');
+    };
+
+    window.closeModal = function (modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    };
+
+    // Update dashboard stats
+    function updateAdminDashboard () {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      document.getElementById('totalMembers').textContent = users.length;
+      document.getElementById('activeMembers').textContent = users.length;
+      document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+
+      // Recent members list
+      const recentList = document.getElementById('recentMembersList');
+      recentList.innerHTML = users.slice(0, 3).map(user => `
+      <div class="flex items-center justify-between p-3 bg-[#0d0d0d] rounded-lg">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center">
+            ${user.firstName.charAt(0)}${user.lastName.charAt(0)}
+          </div>
+          <div>
+            <p class="text-sm font-medium">${user.firstName} ${user.lastName}</p>
+            <p class="text-xs text-zinc-500">Joined ${user.joinDate}</p>
+          </div>
+        </div>
+        <span class="text-xs bg-green-500/10 text-green-500 px-2 py-1 rounded">New</span>
+      </div>
+    `).join('');
+    }
+
+    // Initialize admin data
+    document.addEventListener('DOMContentLoaded', function () {
+      if (document.getElementById('admin-dashboard')) {
+        updateAdminDashboard();
+      }
+    });
+  </script>
+  <script>
+    // ==================== DATA STORAGE ====================
+    // Initialize local storage with sample data if empty
+    if (!localStorage.getItem('users')) {
+      const sampleUsers = [
+        {
+          id: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john@example.com',
+          password: 'password123',
+          phone: '+1 234 567 8900',
+          address: '123 Fitness St, NY',
+          plan: 'Pro',
+          weight: 82.5,
+          height: 180,
+          joinDate: '2023-10-24',
+          workouts: 47,
+          hours: 42.5,
+          calories: 12450,
+          classes: [
+            { name: 'HIIT Cardio', day: 'Monday', time: '09:00', instructor: 'Mike', booked: true },
+            { name: 'Upper Body Strength', day: 'Wednesday', time: '17:00', instructor: 'Sarah', booked: true }
+          ]
+        }
+      ];
+      localStorage.setItem('users', JSON.stringify(sampleUsers));
+    }
+
+    // ==================== UTILITY FUNCTIONS ====================
+    window.toggleMobileMenu = function () {
+      const menu = document.getElementById('mobile-menu');
+      if (menu.classList.contains('max-h-0')) {
+        menu.classList.remove('max-h-0', 'opacity-0');
+        menu.classList.add('max-h-96', 'opacity-100');
+      } else {
+        menu.classList.remove('max-h-96', 'opacity-100');
+        menu.classList.add('max-h-0', 'opacity-0');
+      }
+    };
+
+    window.closeMobileMenu = function () {
+      const menu = document.getElementById('mobile-menu');
+      if (menu) {
+        menu.classList.remove('max-h-96', 'opacity-100');
+        menu.classList.add('max-h-0', 'opacity-0');
+      }
+    };
+
+    // ==================== ROUTER ====================
+    window.router = function (pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+
+      // Show target page
+      const target = document.getElementById(pageId);
+      if (target) target.classList.add('active');
+
+      // Handle navbar visibility
+      const nav = document.getElementById('public-nav');
+      if (nav) {
+        if (pageId.includes('dashboard')) {
+          nav.style.display = 'none';
+        } else {
+          nav.style.display = 'block';
+        }
+      }
+
+      closeMobileMenu();
+      window.scrollTo(0, 0);
+    };
+
+    // ==================== DASHBOARD SECTION SWITCHING ====================
+    window.showDashboardSection = function (section) {
+      // Hide all dashboard sections
+      document.querySelectorAll('.dashboard-section').forEach(el => el.classList.add('hidden'));
+
+      // Show selected section
+      const selectedSection = document.getElementById(`dashboard-${section}`);
+      if (selectedSection) selectedSection.classList.remove('hidden');
+
+      // Update sidebar active state
+      document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+      event.target.closest('.sidebar-link').classList.add('active');
+    };
+
+    // ==================== REGISTER HANDLER ====================
+    document.getElementById('registerForm')?.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Get form values
+      const firstName = document.getElementById('regFirstName').value;
+      const lastName = document.getElementById('regLastName').value;
+      const email = document.getElementById('regEmail').value;
+      const phone = document.getElementById('regPhone').value;
+      const address = document.getElementById('regAddress').value;
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      const plan = document.getElementById('regPlan').value;
+      const weight = parseFloat(document.getElementById('regWeight').value);
+      const height = parseFloat(document.getElementById('regHeight').value);
+
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      // Check if user already exists
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const existingUser = users.find(u => u.email === email);
+
+      if (existingUser) {
+        alert('User with this email already exists!');
+        return;
+      }
+
+      // Create new user
+      const newUser = {
+        id: Date.now().toString(),
+        firstName,
+        lastName,
+        email,
+        phone,
+        address,
+        password,
+        plan,
+        weight,
+        height,
+        joinDate: new Date().toISOString().split('T')[0],
+        workouts: 0,
+        hours: 0,
+        calories: 0,
+        classes: []
+      };
+
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
+      alert('Registration successful! Please login.');
+      router('login');
+    });
+
+    // ==================== LOGIN HANDLER ====================
+    document.getElementById('loginForm')?.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const role = document.querySelector('input[name="role"]:checked').value;
+
+      if (role === 'admin') {
+        // Simple admin login (hardcoded for demo)
+        if (email === 'admin@fitzone.com' && password === 'admin123') {
+          router('admin-dashboard');
+        } else {
+          alert('Invalid admin credentials');
+        }
+        return;
+      }
+
+      // Member login
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if (user) {
+        // Store current user in session
+        sessionStorage.setItem('currentUser', JSON.stringify(user));
+        loadMemberDashboard(user);
+        router('member-dashboard');
+      } else {
+        alert('Invalid email or password');
+      }
+    });
+
+    // ==================== LOAD MEMBER DASHBOARD ====================
+    function loadMemberDashboard (user) {
+      // Update welcome message
+      document.getElementById('userFirstName').textContent = user.firstName;
+      document.getElementById('welcomeMessage').textContent = `Let's crush your workout today, ${user.firstName}!`;
+      document.getElementById('userInitials').textContent = user.firstName.charAt(0) + user.lastName.charAt(0);
+
+      // Update membership info
+      document.getElementById('userPlan').textContent = user.plan + ' Plan';
+
+      // Calculate BMI
+      const heightInMeters = user.height / 100;
+      const bmi = (user.weight / (heightInMeters * heightInMeters)).toFixed(1);
+      document.getElementById('userWeight').innerHTML = `${user.weight} <span class="text-sm font-normal text-zinc-500">kg</span>`;
+      document.getElementById('userBMI').innerHTML = `${bmi} <span class="text-sm font-normal ${getBMIClass(bmi)}" id="bmiCategory">${getBMICategory(bmi)}</span>`;
+
+      // Update progress stats
+      document.getElementById('totalWorkouts').textContent = user.workouts || 0;
+      document.getElementById('totalHours').textContent = (user.hours || 0).toFixed(1);
+      document.getElementById('totalCalories').textContent = (user.calories || 0).toLocaleString();
+
+      // Update profile section
+      document.getElementById('profileFullName').textContent = `${user.firstName} ${user.lastName}`;
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('profilePhone').textContent = user.phone || 'Not provided';
+      document.getElementById('profileAddress').textContent = user.address || 'Not provided';
+
+      // Load schedule
+      loadSchedule(user);
+
+      // Set update form values
+      document.getElementById('updateWeight').value = user.weight;
+      document.getElementById('updateHeight').value = user.height;
+    }
+
+    // ==================== LOAD SCHEDULE ====================
+    function loadSchedule (user) {
+      const todaysClasses = document.getElementById('todaysClasses');
+      const upcomingClasses = document.getElementById('upcomingClasses');
+      const availableClasses = document.getElementById('availableClasses');
+
+      // Sample available classes
+      const allClasses = [
+        { name: 'HIIT Cardio', day: 'Monday', time: '09:00', instructor: 'Mike', duration: '60 min' },
+        { name: 'Yoga Flow', day: 'Tuesday', time: '10:00', instructor: 'Sarah', duration: '75 min' },
+        { name: 'Upper Body Strength', day: 'Wednesday', time: '17:00', instructor: 'John', duration: '90 min' },
+        { name: 'CrossFit', day: 'Thursday', time: '18:00', instructor: 'Alex', duration: '60 min' },
+        { name: 'Lower Body Blast', day: 'Friday', time: '08:00', instructor: 'Emma', duration: '60 min' },
+        { name: 'Weekend Yoga', day: 'Saturday', time: '09:00', instructor: 'Sarah', duration: '75 min' }
+      ];
+
+      // Get today's day
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const today = days[new Date().getDay()];
+
+      // Filter today's classes
+      const todaysClassesList = allClasses.filter(c => c.day === today).slice(0, 2);
+
+      todaysClasses.innerHTML = todaysClassesList.length ?
+        todaysClassesList.map(c => `
+          <div class="flex items-center justify-between p-3 bg-[#0d0d0d] rounded-lg border border-white/5">
+            <div>
+              <h4 class="font-medium">${c.name}</h4>
+              <p class="text-xs text-zinc-500">${c.time} • ${c.instructor}</p>
+            </div>
+            <span class="text-xs bg-[#ff2e00]/10 text-[#ff2e00] px-2 py-1 rounded">Today</span>
+          </div>
+        `).join('') :
+        '<p class="text-zinc-500 text-sm">No classes scheduled for today</p>';
+
+      // Show upcoming classes (user's booked classes)
+      upcomingClasses.innerHTML = user.classes && user.classes.length ?
+        user.classes.map(c => `
+          <div class="flex items-center justify-between p-3 bg-[#0d0d0d] rounded-lg border border-white/5 class-item">
+            <div>
+              <h4 class="font-medium">${c.name}</h4>
+              <p class="text-xs text-zinc-500">${c.day} • ${c.time} • ${c.instructor}</p>
+            </div>
+            <span class="text-xs bg-green-500/10 text-green-500 px-2 py-1 rounded">Booked</span>
+          </div>
+        `).join('') :
+        '<p class="text-zinc-500 text-sm">No classes booked yet</p>';
+
+      // Show available classes to book
+      availableClasses.innerHTML = allClasses
+        .filter(c => !user.classes?.some(bc => bc.name === c.name))
+        .slice(0, 3)
+        .map(c => `
+          <div class="flex items-center justify-between p-3 bg-[#0d0d0d] rounded-lg border border-white/5 class-item">
+            <div>
+              <h4 class="font-medium">${c.name}</h4>
+              <p class="text-xs text-zinc-500">${c.day} • ${c.time} • ${c.instructor}</p>
+            </div>
+            <button onclick="bookClass('${c.name}', '${c.day}', '${c.time}', '${c.instructor}')" 
+              class="text-xs bg-[#ff2e00] hover:bg-red-600 text-white px-3 py-1 rounded transition-colors">
+              Book
+            </button>
+          </div>
+        `).join('');
+    }
+
+    // ==================== BOOK CLASS ====================
+    window.bookClass = function (name, day, time, instructor) {
+      const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+      if (!currentUser) return;
+
+      const users = JSON.parse(localStorage.getItem('users'));
+      const userIndex = users.findIndex(u => u.id === currentUser.id);
+
+      if (!users[userIndex].classes) users[userIndex].classes = [];
+
+      // Check if already booked
+      if (users[userIndex].classes.some(c => c.name === name)) {
+        alert('You already booked this class!');
+        return;
+      }
+
+      users[userIndex].classes.push({ name, day, time, instructor, booked: true });
+      localStorage.setItem('users', JSON.stringify(users));
+      sessionStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
+
+      alert('Class booked successfully!');
+      loadSchedule(users[userIndex]);
+    };
+
+    // ==================== UPDATE PROFILE ====================
+    document.getElementById('updateProfileForm')?.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+      if (!currentUser) return;
+
+      const newWeight = parseFloat(document.getElementById('updateWeight').value);
+      const newHeight = parseFloat(document.getElementById('updateHeight').value);
+
+      const users = JSON.parse(localStorage.getItem('users'));
+      const userIndex = users.findIndex(u => u.id === currentUser.id);
+
+      users[userIndex].weight = newWeight;
+      users[userIndex].height = newHeight;
+
+      localStorage.setItem('users', JSON.stringify(users));
+      sessionStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
+
+      alert('Profile updated successfully!');
+      loadMemberDashboard(users[userIndex]);
+    });
+
+    // ==================== HELPER FUNCTIONS ====================
+    function getBMICategory (bmi) {
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal';
+      if (bmi < 30) return 'Overweight';
+      return 'Obese';
+    }
+
+    function getBMIClass (bmi) {
+      if (bmi < 18.5) return 'text-yellow-500';
+      if (bmi < 25) return 'text-green-500';
+      if (bmi < 30) return 'text-orange-500';
+      return 'text-red-500';
+    }
+
+    // ==================== LOGOUT HANDLER ====================
+    window.handleLogout = function () {
+      if (confirm('Are you sure you want to logout?')) {
+        sessionStorage.removeItem('currentUser');
+        router('home');
+      }
+    };
+
+    // ==================== INITIALIZATION ====================
+    document.addEventListener('DOMContentLoaded', function () {
+      // Set up mobile menu
+      const menuBtn = document.getElementById('mobile-menu-btn');
+      if (menuBtn) menuBtn.addEventListener('click', toggleMobileMenu);
+
+      // Start at home
+      router('home');
+
+      // Check if user is already logged in
+      const currentUser = sessionStorage.getItem('currentUser');
+      if (currentUser) {
+        loadMemberDashboard(JSON.parse(currentUser));
+      }
+    });
+  </script> -->
+</body>
+
+</html>
