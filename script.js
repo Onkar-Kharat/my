@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // ==================== ADMIN FUNCTIONS ====================
 
 // Admin data storage
@@ -857,11 +856,3 @@ document.addEventListener("DOMContentLoaded", function () {
     loadMemberDashboard(JSON.parse(currentUser));
   }
 });
-=======
-console.log("okk");
-
-
-console.log("Hello Ok");
-
-console.log(" Hiii");
->>>>>>> 718f253e6ad75dfcc9ff1057c86fc36b98a56743
